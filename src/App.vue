@@ -16,7 +16,7 @@
                 <div class="collapse navbar-collapse" id="bs-navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li><router-link to="/">{{ $t("info.home") }}</router-link></li>
-                        <li><router-link to="/substitution">{{$t("info.allLive")}}</router-link></li>
+                        <li><router-link to="/list">{{$t("info.allLive")}}</router-link></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -46,17 +46,35 @@
 
             </div>
         </nav>
-        <div class="container-fluid">
+        <div class="container-fluid main-content">
             <router-view></router-view>
         </div>
+        <footer class="footer">
+            <div class="container-fluid footer-content">
+                <div>©SoraLive 2018.</div>
+                <div>Special Thanks to MeowSound Idols and other supporters.</div>
+            </div>
+        </footer>
   </div>
 </template>
 
 <style lang="scss">
-  @import "../node_modules/bootstrap/dist/css/bootstrap.css";
-  body{
-      padding-top: 70px;
-  }
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
+body{
+    padding-top: 70px;
+}
+.main-content{
+    min-height: 100vh;
+}
+.footer {
+    width: 100%;
+    height: 60px;
+    background-color: #ebebeb;
+}
+.footer-content {
+    padding-top: 10px;
+    color: #666;
+}
 </style>
 
 <script>
@@ -81,7 +99,7 @@ class App extends Vue {
         return localStorage.getItem('uname') || "[][NULL]";
     }
     created(){
-        console.log("M L");
+        console.log("SoraLive 0.1.0 created by MoewSound Idols.");
         this.$i18n.locale = localStorage.getItem("lang") || "zh-CN";
     }
     chlang(v){

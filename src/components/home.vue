@@ -1,11 +1,18 @@
 <template>
-    <div>
-        <input v-model="msg">
-        <p>msg: {{msg}}</p>
-        <p>computed msg: {{computedMsg}}</p>
-        <button @click="greet">Greet</button>
+    <div class="jumbotron">
+        <div class="jumbotron-centerhead" v-html="$t('promotion.home')"></div>
+        <p>&nbsp;</p>
+        <p>{{$t("tips.homeDescription")}}</p>
+        <p><router-link to="/reg" class="btn btn-primary btn-lg" role="button">{{$t("info.joinnow")}}</router-link></p>
     </div>
 </template>
+
+<style lang="scss" scoped>
+.jumbotron-centerhead{
+    text-align: center;
+}
+</style>
+
 
 <script>
 import Vue from 'vue'
@@ -13,13 +20,7 @@ import Component from 'vue-class-component'
 
 @Component
 class HomePage extends Vue {
-    msg = 123
-    get computedMsg(){
-        return 'computed ' + this.msg
-    }
-    greet(){
-        this.$i18n.locale = 'en-US'
-    }
+
 }
 export default HomePage;
 </script>

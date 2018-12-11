@@ -123,14 +123,34 @@ class UserPage extends Vue {
     }
     async setStreamOpen() {
         if (!this.streaming) {
-            this.streaming = true;
+            let api = this.$gConst.apiRoot + "set-roomstatus";
+            let res = await fetchpost(api, {
+                token: localStorage.getItem('token') || "",
+                status: 1
+            });
+            let json = await res.json();
+            if(json['error']==0){
+                this.streaming = true;
+            }else{
+                this.$gConst.globalbus.$emit("send-info", json['info'])
+            }
         } else {
             console.log("[BAKA INFO] Streaming is already OPEN.");
         }
     }
     async setStreamClose() {
         if (this.streaming) {
-            this.streaming = false;
+            let api = this.$gConst.apiRoot + "set-roomstatus";
+            let res = await fetchpost(api, {
+                token: localStorage.getItem('token') || "",
+                status: 0
+            });
+            let json = await res.json();
+            if(json['error']==0){
+                this.streaming = false;
+            }else{
+                this.$gConst.globalbus.$emit("send-info", json['info'])
+            }
         } else {
             console.log("[BAKA INFO] Streaming is already CLOSE.");
         }
