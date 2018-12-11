@@ -1,0 +1,68 @@
+const zh_CN = {
+    info: {
+        soralive: "SoraLive",
+        home: "首页",
+        allLive: "所有直播",
+        live: "直播",
+        language: "语言",
+        reg: "注册",
+        login: "登录",
+        email: "E-mail",
+        password: "密码",
+        uname: "用户名",
+        repass: "重复密码",
+        roomname: "房间名",
+        null: "喵~",
+        info: "信息提示",
+        success: "成功",
+        userCenter: "用户中心",
+        myLiveRoom: "我的直播间",
+        logout: "注销",
+        unknownError: "未知错误",
+        basicInfo: "基本信息",
+        loading: "正在加载",
+        databaseError: "数据库错误",
+        liveroomInfo: "直播间信息",
+        status: "当前状态",
+        close: "关闭",
+        open: "打开",
+        description: "简介",
+        updateRN: "修改房间名及简介",
+        streamParam: "直播参数",
+        streamServer: "直播地址",
+        streamKey: "串流码",
+        resetStreamKey: "重置串流码"
+    },
+    tips: {
+        repassDifferent: "两次密码不一致。",
+        registerSuccess: "注册成功，请等待管理员审核后才可开设房间，审核通过后会由管理员手工向你邮箱发送通知邮件。请留意来自@minyami.net的邮件。",
+        usernameNotEmpty: "用户名不能为空。",
+        passwordNotEmpty: "密码不能为空。",
+        emailNotEmpty: "邮箱不能为空。",
+        roomnameNotEmpty: "房间名不能为空",
+        usernameUsed: "用户名已被其他用户使用。",
+        emailUsed: "邮箱已被其他用户使用。",
+        tokenNotEmpty: "Token是必须参数",
+        invalidToken: "Token无效",
+        passNotMatched: "用户名和密码不匹配",
+        loginencryptfailed: "在登录过程中加密失败",
+        alreadyLogin: "您已经是登录状态",
+        unloginSucceed: "成功注销",
+        loginSucceed: "成功登录",
+        needApprove: "<p>您的账号目前是未通过审核状态。</p><p>您可以不受限制的浏览本站内容，但是你不能向本站推流。</p><p>要开设直播间并推流，请等待管理员审核后进行。</p>",
+        updateRnSucceed: "房间名及简介修改成功",
+        clickButtonBelowToResetStreamKey: "点击下面按钮重置串流码",
+        resetStreamKeyTips1: "当直播视频与录制不对应，比如直播节目播放过去的内容的时候可以尝试重置串流码来避免缓存问题。",
+        resetStreamKeyTips2: "在公共机器上串流或其他安全性原因也可通过重置串流码使之前的串流设置失效。"
+    },
+    action: {
+        toggleNavbar: "切换导航栏",
+        close: "关闭",
+        copy: "复制"
+    },
+    lang: {
+        'zh-CN': "简体中文",
+        'en-US': "英语"
+    }
+}
+export default zh_CN;

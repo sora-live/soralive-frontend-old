@@ -1,29 +1,114 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+        <Modal></Modal>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
+                        <span class="sr-only">{{ $t("action.toggleNavbar") }}</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <router-link class="navbar-brand" to="/">{{ $t("info.soralive") }}</router-link>
+                </div>
+                
+                <div class="collapse navbar-collapse" id="bs-navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><router-link to="/">{{ $t("info.home") }}</router-link></li>
+                        <li><router-link to="/substitution">{{$t("info.allLive")}}</router-link></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{$t("lang." + currentLang)}} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:;" @click="chlang('zh-CN')">{{$t("lang.zh-CN")}}</a></li>
+                                <li><a href="javascript:;" @click="chlang('en-US')">{{$t("lang.en-US")}}</a></li>
+                            </ul>
+                        </li>
+                        <template v-if="isLogin">
+                        <li><router-link to="/reg">{{$t("info.reg")}}</router-link></li>
+                        <li><router-link to="/login">{{$t("info.login")}}</router-link></li>
+                        </template>
+                        <template v-else>
+                        <li class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aira-haspopup="true" aria-expanded="false">{{ uname }} <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><router-link to="/user">{{$t("info.userCenter")}}</router-link></li>
+                                <li><a href="javascript:;">{{$t("info.myLiveRoom")}}</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="javascript:;" @click="logout">{{$t("info.logout")}}</a></li>
+                            </ul>
+                        </li>
+                        </template>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <router-view></router-view>
+        </div>
   </div>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+  @import "../node_modules/bootstrap/dist/css/bootstrap.css";
+  body{
+      padding-top: 70px;
   }
-}
 </style>
+
+<script>
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import Modal from './components/modal.vue'
+import fetchpost from './util/fetchpost'
+
+@Component({
+    components:{
+        Modal
+    }
+})
+class App extends Vue {
+    get currentLang(){
+        return this.$i18n.locale;
+    }
+    get isLogin(){
+        return localStorage.getItem('token') == null;
+    }
+    get uname(){
+        return localStorage.getItem('uname') || "[][NULL]";
+    }
+    created(){
+        console.log("M L");
+        this.$i18n.locale = localStorage.getItem("lang") || "zh-CN";
+    }
+    chlang(v){
+        this.$i18n.locale = v;
+        localStorage.setItem("lang", v);
+    }
+    async logout(){
+        let url = this.$gConst.apiRoot + "user-logout";
+        let res = await fetchpost(url, {
+            token: localStorage.getItem('token') || ""
+        });
+        let json = await res.json();
+        if(json['error'] != 0){
+            this.$gConst.globalbus.$emit("send-info", json['info']);
+        }else{
+            this.$gConst.globalbus.$emit("send-info", "tips.unloginSucceed");   
+        }
+        this.$router.push('/login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('uname');
+        localStorage.removeItem('sk');
+        localStorage.removeItem('uid');
+        localStorage.removeItem('user-type');
+        location.reload();
+    }
+}
+
+export default App;
+</script>
+
