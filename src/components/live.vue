@@ -2,7 +2,10 @@
     <div>
         <h1>{{ roomname }}</h1>
         <p>@{{ uname}}</p>
-        <div id="playerSlot">
+        <div v-if="is_streaming" class="player-slot">
+            <Player :url="streaming_uri"></Player>
+        </div>
+        <div id="playerSlot" class="player-slot" v-else>
             <div v-if="is_loading">{{$t("info.loading")}}</div>
             <div v-else class="player-area">未开播</div>
         </div>
@@ -14,7 +17,7 @@
 </template>
 
 <style>
-#playerSlot{
+.player-slot{
     background-color: black;
     height: 75vh;
 }
@@ -24,25 +27,27 @@
     text-align: center;
     padding-top: 20%;
 }
-video{
-    height: 100%;
-    width: 100%;
-}
 </style>
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Hls from 'hls.js'
 import fetchpost from '../util/fetchpost';
+import Player from './player.vue';
 
-@Component
+@Component({
+    components: {
+        Player
+    }
+})
 class LivePage extends Vue {
     roomname = "Room Title";
     uname = "username";
     description = "Description";
     is_loading = true;
+    is_streaming = false;
+    streaming_uri = "";
     mounted(){
-        console.log(this.$route.params.uid);
         this.getPlayInfo();
         //this.readyPlayer();
     }
@@ -65,24 +70,9 @@ class LivePage extends Vue {
         this.is_loading = false;
 
         if(resjson.streaming == 1){
-            await this.readyPlayer(resjson.streaming_uri);
+            this.is_streaming = true;
+            this.streaming_uri = resjson.streaming_uri;
         }
-    }
-    async readyPlayer(url){
-        let playerSlot = document.getElementById("playerSlot");
-        //清空
-        playerSlot.innerHTML = "";
-
-        let videoElement = document.createElement("video");
-        playerSlot.appendChild(videoElement);
-
-
-        let hls = new Hls();
-        hls.loadSource(url);
-        hls.attachMedia(videoElement);
-        hls.on(Hls.Events.MANIFEST_PARSED, function(){
-            videoElement.play();
-        })
     }
 }
 export default LivePage;
