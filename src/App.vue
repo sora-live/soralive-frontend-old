@@ -51,7 +51,7 @@
         </div>
         <footer class="footer">
             <div class="container-fluid footer-content">
-                <div>©SoraLive 2018.</div>
+                <div>©SoraLive 2018-2019.</div>
                 <div>Special Thanks to MeowSound Idols and other supporters.</div>
             </div>
         </footer>
