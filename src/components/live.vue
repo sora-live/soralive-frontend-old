@@ -31,7 +31,6 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import Hls from 'hls.js'
 import fetchpost from '../util/fetchpost';
 import Player from './player.vue';
 
