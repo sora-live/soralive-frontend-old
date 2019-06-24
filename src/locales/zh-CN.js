@@ -66,6 +66,8 @@ const zh_CN = {
         liveRoomEmpty: "没有人正在分享自己的キラキラドキドキ",
         uidInvalid: "请求的房间号无效。",
         userInvalid: "请求的用户不存在或未开通直播间。",
+        signNotEmpty: "请求签名不能为空",
+        signFailed: "请求签名无效"
     },
     action: {
         toggleNavbar: "切换导航栏",
