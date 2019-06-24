@@ -55,7 +55,7 @@ class LoginPage extends Vue {
         }
     }
     async dologin(){
-        let res = await fetch(this.$gConst.apiRoot + 'pre-login');
+        let res = await fetchpost(this.$gConst.apiRoot + 'user/prelogin', {});
         let json = await res.json();
         
         let publicKey = json['key'];
@@ -70,8 +70,8 @@ class LoginPage extends Vue {
             return;
         }
         
-        let res2 = await fetchpost(this.$gConst.apiRoot + "user-login", {
-            token: token,
+        let res2 = await fetchpost(this.$gConst.apiRoot + "user/login", {
+            token,
             uname: this.uname,
             pass: encryptedPassword
         });

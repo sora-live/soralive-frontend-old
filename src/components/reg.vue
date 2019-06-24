@@ -78,7 +78,7 @@ class RegPage extends Vue {
             this.alertInfo = "tips.repassDifferent";
             this.isAlert = true;
         }else{
-            let api = this.$gConst.apiRoot + "user-reg";
+            let api = this.$gConst.apiRoot + "user/reg";
             let res = await fetchPost(api, {
                 uname: this.uname,
                 email: this.email,

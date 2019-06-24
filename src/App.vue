@@ -81,7 +81,7 @@ body{
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Modal from './components/modal.vue'
-import fetchpost from './util/fetchpost'
+import {fetchPostWithSign} from './util/fetchpost'
 
 @Component({
     components:{
@@ -107,8 +107,8 @@ class App extends Vue {
         localStorage.setItem("lang", v);
     }
     async logout(){
-        let url = this.$gConst.apiRoot + "user-logout";
-        let res = await fetchpost(url, {
+        let url = this.$gConst.apiRoot + "user/logout";
+        let res = await fetchPostWithSign(url, {
             token: localStorage.getItem('token') || ""
         });
         let json = await res.json();
