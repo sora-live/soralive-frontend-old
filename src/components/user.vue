@@ -70,7 +70,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import fetchpost from '../util/fetchpost'
+import fetchpost, { fetchPostWithSign } from '../util/fetchpost'
 import copyTextToClipboard from '../util/copytext'
 
 @Component
@@ -90,8 +90,8 @@ class UserPage extends Vue {
         this.refresh();
     }
     async refresh() {
-        let api = this.$gConst.apiRoot + "user-detail";
-        let res = await fetchpost(api, {
+        let api = this.$gConst.apiRoot + "user/detail";
+        let res = await fetchPostWithSign(api, {
             token: localStorage.getItem('token') || ""
         });
         let json = await res.json();
