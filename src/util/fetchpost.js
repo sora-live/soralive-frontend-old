@@ -19,6 +19,7 @@ export default function fetchpost(url, data){
 }
 
 export function fetchPostWithSign(url, data) {
+    data['ts'] = Date.now();
     let unsignedString = Object.keys(data).sort().reduce((unsigned, i) => unsigned += i + data[i], "");
     let sk = localStorage.getItem("sk");
     let sign = hmac_sha1(unsignedString, sk);

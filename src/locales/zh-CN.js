@@ -67,7 +67,8 @@ const zh_CN = {
         uidInvalid: "请求的房间号无效。",
         userInvalid: "请求的用户不存在或未开通直播间。",
         signNotEmpty: "请求签名不能为空",
-        signFailed: "请求签名无效"
+        signFailed: "请求签名无效",
+        timestampNotEmpty: "API请求需要附加时间戳"
     },
     action: {
         toggleNavbar: "切换导航栏",
