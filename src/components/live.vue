@@ -51,7 +51,7 @@ class LivePage extends Vue {
         //this.readyPlayer();
     }
     async getPlayInfo(){
-        let api = this.$gConst.apiRoot + "get-roominfo";
+        let api = this.$gConst.apiRoot + "index/roominfo";
         let res = await fetchpost(api, {
             uid: this.$route.params.uid
         });
