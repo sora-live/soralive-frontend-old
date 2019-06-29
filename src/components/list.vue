@@ -62,6 +62,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import fetchpost from '../util/fetchpost'
 
 @Component
 class ListPage extends Vue{
@@ -70,8 +71,8 @@ class ListPage extends Vue{
         this.refresh();
     }
     async refresh(){
-        let api = this.$gConst.apiRoot + "list-streaming";
-        let res = await fetch(api);
+        let api = this.$gConst.apiRoot + "index/getlist";
+        let res = await fetchpost(api, {});
         let roomlist = await res.json();
         this.roomlist = roomlist;
     }

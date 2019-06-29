@@ -70,7 +70,7 @@
 <script>
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import fetchpost, { fetchPostWithSign } from '../util/fetchpost'
+import { fetchPostWithSign } from '../util/fetchpost'
 import copyTextToClipboard from '../util/copytext'
 
 @Component
@@ -123,8 +123,8 @@ class UserPage extends Vue {
     }
     async setStreamOpen() {
         if (!this.streaming) {
-            let api = this.$gConst.apiRoot + "set-roomstatus";
-            let res = await fetchpost(api, {
+            let api = this.$gConst.apiRoot + "user/changestatus";
+            let res = await fetchPostWithSign(api, {
                 token: localStorage.getItem('token') || "",
                 status: 1
             });
@@ -140,8 +140,8 @@ class UserPage extends Vue {
     }
     async setStreamClose() {
         if (this.streaming) {
-            let api = this.$gConst.apiRoot + "set-roomstatus";
-            let res = await fetchpost(api, {
+            let api = this.$gConst.apiRoot + "user/changestatus";
+            let res = await fetchPostWithSign(api, {
                 token: localStorage.getItem('token') || "",
                 status: 0
             });
@@ -159,8 +159,8 @@ class UserPage extends Vue {
         let rn = this.roomname || "";
         let desc = this.description || "";
 
-        let api = this.$gConst.apiRoot + "update-rn";
-        let res = await fetchpost(api, {
+        let api = this.$gConst.apiRoot + "user/updatern";
+        let res = await fetchPostWithSign(api, {
             token: localStorage.getItem('token') || "",
             roomname: rn,
             description: desc
@@ -173,8 +173,8 @@ class UserPage extends Vue {
         }
     }
     async resetSK(){
-        let api = this.$gConst.apiRoot + "reset-streamkey";
-        let res = await fetchpost(api, {
+        let api = this.$gConst.apiRoot + "user/resetkey";
+        let res = await fetchPostWithSign(api, {
             token: localStorage.getItem('token') || ""
         });
         let json = await res.json();
