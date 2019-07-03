@@ -20,6 +20,17 @@
                     <p>
                         <button class="btn btn-primary" @click="updateRN">{{$t("info.updateRN")}}</button>
                     </p>
+                    <p>
+                        {{$t("info.privatelevel")}}:
+                        <button class="btn" :class="{'btn-default': privateLevel != 0, 'btn-success': privateLevel == 0}" @click="setPrivate(0)">{{$t("info.anyone")}}</button>
+                        <button class="btn" :class="{'btn-default': privateLevel != 1, 'btn-success': privateLevel == 1}" @click="setPrivate(1)">{{$t("info.needloged")}}</button>
+                        <button class="btn" :class="{'btn-default': privateLevel != 2, 'btn-success': privateLevel == 2}" @click="setPrivate(2)">{{$t("info.needpassword")}}</button>
+                    </p>
+                    <p>
+                        {{$t("info.privatepassword")}}:
+                        <input class="textbox" type="text" v-model="privatePassword" size="50">
+                        <button class="btn btn-primary" @click="setPrivate(undefined)">{{$t("info.updatePassword")}}</button>
+                    </p>
                 </div>
                 <div>
                     <h3>{{$t("info.streamParam")}}</h3>
@@ -86,6 +97,8 @@ class UserPage extends Vue {
     uname = '';
     loadingInfo = 'info.loading';
     streaming_address = '';
+    privateLevel = 0;
+    privatePassword = "";
     created() {
         this.refresh();
     }
@@ -111,6 +124,8 @@ class UserPage extends Vue {
             this.description = json['user']['description'];
             this.cover = json['user']['cover'];
             this.streaming = json['user']['streaming'] == "1";
+            this.privateLevel = json['user']['privateLevel'];
+            this.privatePassword = json['user']['privatePassword'];
             this.streaming_address = json['streaming_address'];
             this.loadingInfo = "tips.needApprove";
         }
@@ -183,6 +198,28 @@ class UserPage extends Vue {
             return;
         }else{
             location.reload();
+        }
+    }
+    async setPrivate(level){
+        let currentLevel = this.privateLevel;
+        if(level !== undefined) currentLevel = level;
+        let api = this.$gConst.apiRoot + "user/updateprivatelevel";
+
+        let res = await fetchPostWithSign(api, {
+            token: localStorage.getItem('token') || "",
+            privateLevel: currentLevel,
+            privatePassword: this.privatePassword
+        });
+        let json = await res.json();
+        if (json['error'] != 0) {
+            this.$gConst.globalbus.$emit("send-info", json['info']);
+            return;
+        }else{
+            if(level == undefined){
+                this.$gConst.globalbus.$emit("send-info", json['info']);
+            }else{
+                this.privateLevel = level;
+            }
         }
     }
     copyStreamingURL(){

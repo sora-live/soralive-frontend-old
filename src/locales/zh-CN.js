@@ -37,7 +37,13 @@ const zh_CN = {
         streamServer: "直播地址",
         streamKey: "串流码",
         resetStreamKey: "重置串流码",
-        imcomming: "我来！"
+        imcomming: "我来！",
+        privatelevel: "直播公开等级",
+        anyone: "任何人",
+        needloged: "仅登录用户",
+        needpassword: "需要输入密码",
+        privatepassword: "密码",
+        updatePassword: "更新密码"
     },
     tips: {
         repassDifferent: "两次密码不一致。",

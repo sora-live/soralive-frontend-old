@@ -37,7 +37,13 @@ const en_US = {
         streamServer: "Stream Server",
         streamKey: "Stream Key",
         resetStreamKey: "Reset stream key",
-        imcomming: "I'm Comming!"
+        imcomming: "I'm Comming!",
+        privatelevel: "Public Level",
+        anyone: "Anyone",
+        needloged: "Only Logged",
+        needpassword: "Need to enter password",
+        privatepassword: "Private stream password",
+        updatePassword: "Modify stream password"
     },
     tips: {
         repassDifferent: "The duplicate password is different.",
