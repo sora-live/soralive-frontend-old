@@ -19,12 +19,41 @@
     <div v-else>
         <h1>{{ roomname }}</h1>
         <p>@{{ uname}}</p>
-        <div v-if="is_streaming" class="player-slot">
-            <Player :url="streaming_uri"></Player>
-        </div>
-        <div id="playerSlot" class="player-slot" v-else>
-            <div v-if="is_loading">{{$t("info.loading")}}</div>
-            <div v-else class="player-area">未开播</div>
+        <div class="container-fluid">
+            <div class="col-md-9">
+                <div v-if="is_streaming" class="player-slot">
+                    <Player :url="streaming_uri"></Player>
+                </div>
+                <div id="playerSlot" class="player-slot" v-else>
+                    <div v-if="is_loading">{{$t("info.loading")}}</div>
+                    <div v-else class="player-area">未开播</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="row">
+                    <h4 class="col-md-6">实时评论</h4>
+                    <div class="col-md-6 text-right"><span class="material-icons" title="在线人数">remove_red_eye</span><span class="online-person">{{online}}</span></div>
+                </div>
+                <div class="comment-area">
+                    <div class="comment-line">
+                        <span class="comment-user">用户名：</span>
+                        <span>评论内容。这里有一些文字</span>
+                    </div>
+                </div>
+                <div class="comment-input-area">
+                    <form @submit.prevent="sendComment">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <label for="comment-input" class="sr-only">评论输入：</label>
+                                <input type="text" class="form-control" id="comment-input" v-model="input_comment">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-default">发送</button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         <div>
             <h3>{{$t("info.description")}}</h3>
@@ -33,10 +62,47 @@
     </div>
 </template>
 
-<style>
+<style lang="scss" scoped>
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(../assets/MaterialIcons-Regular.woff2) format('woff2'),
+    url(../assets/MaterialIcons-Regular.woff) format('woff'),
+    url(../assets/MaterialIcons-Regular.ttf) format('truetype');
+}
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+.online-person{
+    font-size: 18px;
+    padding-left: 15px;
+}
 .player-slot{
     background-color: black;
-    height: 75vh;
+    height: 480px;
+    @media screen and (min-width: 1200px) and (max-width: 1800px) {
+        height: 600px;
+    }
+    @media screen and (min-width: 1800px) {
+        height: 720px;
+    }
 }
 .player-area{
     color: white;
@@ -52,6 +118,29 @@
 }
 .password-area-submit{
     margin-top: 100px;
+}
+.comment-area{
+    height: 397px;
+    @media screen and (min-width: 1200px) and (max-width: 1800px) {
+        height: 517px;
+    }
+    @media screen and (min-width: 1800px) {
+        height: 637px;
+    }
+    overflow-y: scroll;
+}
+.comment-header{
+    height: 10px;
+}
+.comment-input-area{
+    margin-top: 10px;
+}
+.comment-line{
+    margin: 5px;
+}
+.comment-user{
+    color: rgb(111, 159, 173);
+    font-weight: bold;
 }
 </style>
 <script>
@@ -74,6 +163,8 @@ class LivePage extends Vue {
     streaming_uri = "";
     require_password = false;
     password = "";
+    online = 0;
+    input_comment = "";
     mounted(){
         this.getPlayInfo();
         //this.readyPlayer();
@@ -126,6 +217,9 @@ class LivePage extends Vue {
             this.is_streaming = true;
             this.streaming_uri = resjson.streaming_uri;
         }
+    }
+    async sendComment(){
+        console.log(this.input_comment);
     }
 }
 export default LivePage;
