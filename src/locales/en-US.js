@@ -72,6 +72,11 @@ const en_US = {
         liveRoomEmpty: "No one is sharing their own キラキラドキドキ",
         uidInvalid: "The requested room number is invalid.",
         userInvalid: "The requested user does not exist or does not open the live room.",
+        signNotEmpty: "Request signature cannot be empty.",
+        signFailed: "Invalid request signature.",
+        timestampNotEmpty: "API request requires additional timestamp.",
+        wrongPassword: "Wrong password",
+        needLogin: "The live room needs to be logged in before entering."
     },
     action: {
         toggleNavbar: "Toggle navigation bar",

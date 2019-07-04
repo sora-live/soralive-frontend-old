@@ -74,7 +74,9 @@ const zh_CN = {
         userInvalid: "请求的用户不存在或未开通直播间。",
         signNotEmpty: "请求签名不能为空",
         signFailed: "请求签名无效",
-        timestampNotEmpty: "API请求需要附加时间戳"
+        timestampNotEmpty: "API请求需要附加时间戳",
+        wrongPassword: "密码错误",
+        needLogin: "该直播间需要登录后才可进入"
     },
     action: {
         toggleNavbar: "切换导航栏",
