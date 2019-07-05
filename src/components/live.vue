@@ -34,20 +34,20 @@
                     <h4 class="col-md-6">实时评论</h4>
                     <div class="col-md-6 text-right"><span class="material-icons" title="在线人数">remove_red_eye</span><span class="online-person">{{online}}</span></div>
                 </div>
-                <div class="comment-area">
-                    <div class="comment-line">
-                        <span class="comment-user">用户名：</span>
-                        <span>评论内容。这里有一些文字</span>
+                <div class="comment-area" id="commentarea">
+                    <div class="comment-line" v-for="comment in commentList" :key="comment.cmtId">
+                        <span class="comment-user">{{comment.uname}}：</span>
+                        <span>{{comment.content}}</span>
                     </div>
                 </div>
                 <div class="comment-input-area">
-                    <form @submit.prevent="sendComment">
+                    <form autocomplete="off" @submit.prevent="sendComment">
                         <div class="form-group">
                             <div class="input-group">
                                 <label for="comment-input" class="sr-only">评论输入：</label>
-                                <input type="text" class="form-control" id="comment-input" v-model="input_comment">
+                                <input type="text" class="form-control" id="comment-input" v-model="input_comment" :disabled="!is_readyForChat">
                                 <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-default">发送</button>
+                                    <button type="submit" class="btn btn-default" :disabled="!is_readyForChat">发送</button>
                                 </span>
                             </div>
                         </div>
@@ -147,6 +147,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import fetchpost, { fetchPostWithSign } from '../util/fetchpost';
+import sleep from '../util/sleep'
 import Player from './player.vue';
 
 @Component({
@@ -165,9 +166,12 @@ class LivePage extends Vue {
     password = "";
     online = 0;
     input_comment = "";
+    chatroom_ws;
+    is_readyForChat = false;
+    commentList = [];
     mounted(){
         this.getPlayInfo();
-        //this.readyPlayer();
+        this.connectChatRoom();
     }
     async getPlayInfo(){
         let api = this.$gConst.apiRoot + "index/roominfo";
@@ -218,8 +222,75 @@ class LivePage extends Vue {
             this.streaming_uri = resjson.streaming_uri;
         }
     }
+    async connectChatRoom(){
+        let ws_api = this.$gConst.wsHost;
+        this.chatroom_ws = new WebSocket(ws_api);
+        this.chatroom_ws.addEventListener('open', () => {
+            this.wsSend({
+                token: localStorage.getItem('token') || "",
+                roomid: this.$route.params.uid,
+                cmd: 1
+            });
+            this.wsStartHeartbeat();
+        });
+
+        this.chatroom_ws.addEventListener('message', e => {
+            let msg = JSON.parse(e.data);
+            switch (msg.cmd) {
+                case 1:
+                    {
+                        if(msg.error == 0){
+                            this.is_readyForChat = true;
+                        }
+                    }
+                    break
+                case 2:
+                    {
+                        this.online = msg.online;
+                    }
+                    break;
+                case 3:
+                    {
+                        this.commentList.splice(0, this.commentList.length - 999);
+                        this.commentList.push(msg.comment);
+                        //自动滚动到底部
+                        this.$nextTick(() => {
+                            let commentarea = document.getElementById('commentarea');
+                            commentarea.scrollTop = commentarea.scrollHeight + 50;
+                        });
+                    }
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+    async wsStartHeartbeat(){
+        while(this.chatroom_ws !== undefined && this.chatroom_ws !== null && this.chatroom_ws.readyState == 1){
+            this.wsSend({
+                cmd: 2
+            });
+            await sleep(30000);
+        }
+    }
+    async wsSend(msg){
+        if(this.chatroom_ws !== undefined && this.chatroom_ws !== null && this.chatroom_ws.readyState == 1){
+            this.chatroom_ws.send(JSON.stringify(msg));
+        }else{
+            console.log("ws 连接已关闭或未成功建立");
+        }
+    }
     async sendComment(){
-        console.log(this.input_comment);
+        if(this.input_comment !== ""){
+            this.wsSend({
+                cmd: 3,
+                comment: {
+                    content: this.input_comment
+                }
+            })
+            this.input_comment = "";
+        }
+
     }
 }
 export default LivePage;
