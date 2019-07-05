@@ -173,6 +173,12 @@ class LivePage extends Vue {
         this.getPlayInfo();
         this.connectChatRoom();
     }
+    beforeDestroy(){
+        if(this.chatroom_ws !== undefined && this.chatroom_ws !== null){
+            console.log("关闭ws");
+            this.chatroom_ws.close();
+        }
+    }
     async getPlayInfo(){
         let api = this.$gConst.apiRoot + "index/roominfo";
         let res;
