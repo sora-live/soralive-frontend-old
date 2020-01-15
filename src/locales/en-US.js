@@ -76,7 +76,10 @@ const en_US = {
         signFailed: "Invalid request signature.",
         timestampNotEmpty: "API request requires additional timestamp.",
         wrongPassword: "Wrong password",
-        needLogin: "The live room needs to be logged in before entering."
+        needLogin: "The live room needs to be logged in before entering.",
+        oldPassNotEmpty: "Old password cannot be empty.",
+        oldPassWrong: "Old password is incorrect.",
+        notAuth: "Not authorized to perform this operation."
     },
     action: {
         toggleNavbar: "Toggle navigation bar",

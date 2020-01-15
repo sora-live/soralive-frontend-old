@@ -76,7 +76,10 @@ const zh_CN = {
         signFailed: "请求签名无效",
         timestampNotEmpty: "API请求需要附加时间戳",
         wrongPassword: "密码错误",
-        needLogin: "该直播间需要登录后才可进入"
+        needLogin: "该直播间需要登录后才可进入",
+        oldPassNotEmpty: "原密码不能为空",
+        oldPassWrong: "原密码不正确",
+        notAuth: "无权进行本操作"
     },
     action: {
         toggleNavbar: "切换导航栏",
