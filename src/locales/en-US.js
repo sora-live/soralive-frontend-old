@@ -43,7 +43,10 @@ const en_US = {
         needloged: "Only Logged",
         needpassword: "Need to enter password",
         privatepassword: "Private stream password",
-        updatePassword: "Modify stream password"
+        updatePassword: "Modify stream password",
+        changepass: "Change password",
+        oldPassword: "Old Password",
+        newPassword: "New Password"
     },
     tips: {
         repassDifferent: "The duplicate password is different.",
@@ -79,7 +82,8 @@ const en_US = {
         needLogin: "The live room needs to be logged in before entering.",
         oldPassNotEmpty: "Old password cannot be empty.",
         oldPassWrong: "Old password is incorrect.",
-        notAuth: "Not authorized to perform this operation."
+        notAuth: "Not authorized to perform this operation.",
+        changePassSuccess: "The password was changed successfully. You need to login again with your new password."
     },
     action: {
         toggleNavbar: "Toggle navigation bar",

@@ -54,6 +54,7 @@
             <p>UID: {{uid}}</p>
             <p>{{$t("info.email")}}: {{email}}</p>
             <p>{{$t("info.uname")}}: {{uname}}</p>
+            <p><router-link to="/changepass">{{$t("info.changepass")}}</router-link></p>
         </div>
     </div>
 </template>

@@ -7,6 +7,7 @@ import LoginPage from './components/login.vue'
 import RegPage from './components/reg.vue'
 import UserPage from './components/user.vue'
 import LivePage from './components/live.vue'
+import ChangePassPage from './components/changepass.vue'
 
 Vue.use(Router)
 
@@ -19,6 +20,7 @@ export default new Router({
     {path: '/login', name: "login", component: LoginPage},
     {path: '/reg', name: "reg", component: RegPage},
     {path: '/user', name: "user", component: UserPage},
+    {path: '/changepass', name: "changepass", component: ChangePassPage},
     {path: '/live/:uid', name: "live", component: LivePage},
   ]
 })

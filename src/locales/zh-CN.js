@@ -43,7 +43,10 @@ const zh_CN = {
         needloged: "仅登录用户",
         needpassword: "需要输入密码",
         privatepassword: "密码",
-        updatePassword: "更新密码"
+        updatePassword: "更新密码",
+        changepass: "修改密码",
+        oldPassword: "旧密码",
+        newPassword: "新密码"
     },
     tips: {
         repassDifferent: "两次密码不一致。",
@@ -79,7 +82,8 @@ const zh_CN = {
         needLogin: "该直播间需要登录后才可进入",
         oldPassNotEmpty: "原密码不能为空",
         oldPassWrong: "原密码不正确",
-        notAuth: "无权进行本操作"
+        notAuth: "无权进行本操作",
+        changePassSuccess: "修改密码成功，您现在需要用您的新密码重新登录。"
     },
     action: {
         toggleNavbar: "切换导航栏",

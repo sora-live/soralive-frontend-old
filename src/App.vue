@@ -35,7 +35,7 @@
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" role="button" aira-haspopup="true" aria-expanded="false">{{ uname }} <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><router-link to="/user">{{$t("info.userCenter")}}</router-link></li>
-                                <li><a href="javascript:;">{{$t("info.myLiveRoom")}}</a></li>
+                                <li><a href="javascript:;" @click="jumptomyroom">{{$t("info.myLiveRoom")}}</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="javascript:;" @click="logout">{{$t("info.logout")}}</a></li>
                             </ul>
@@ -51,7 +51,7 @@
         </div>
         <footer class="footer">
             <div class="container-fluid footer-content">
-                <div>©SoraLive 2018-2019.</div>
+                <div>©SoraLive 2018-2020.</div>
                 <div>Special Thanks to MeowSound Idols and other supporters.</div>
             </div>
         </footer>
@@ -124,6 +124,15 @@ class App extends Vue {
         localStorage.removeItem('uid');
         localStorage.removeItem('user-type');
         location.reload();
+    }
+    async jumptomyroom(){
+        var type = parseInt(localStorage.getItem('user-type') || "0");
+        if(type & 1 == 1){
+            var uid = localStorage.getItem('uid') || "0";
+            this.$router.push('/live/' + uid);
+        }else{
+            this.$router.push('/user');
+        }
     }
 }
 

@@ -36,8 +36,8 @@
                 </div>
                 <div class="comment-area" id="commentarea">
                     <div class="comment-line" v-for="comment in commentList" :key="comment.cmtId">
-                        <span class="comment-user">{{comment.uname}}：</span>
-                        <span>{{comment.content}}</span>
+                        <span class="comment-user">{{comment.author.uname}}：</span>
+                        <span>{{comment.comment.content}}</span>
                     </div>
                 </div>
                 <div class="comment-input-area">
@@ -248,6 +248,7 @@ class LivePage extends Vue {
                         if(msg.error == 0){
                             this.is_readyForChat = true;
                         }
+                        this.online = msg.online;
                     }
                     break
                 case 2:
@@ -258,7 +259,7 @@ class LivePage extends Vue {
                 case 3:
                     {
                         this.commentList.splice(0, this.commentList.length - 999);
-                        this.commentList.push(msg.comment);
+                        this.commentList.push(msg);
                         //自动滚动到底部
                         this.$nextTick(() => {
                             let commentarea = document.getElementById('commentarea');
