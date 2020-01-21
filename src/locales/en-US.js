@@ -46,7 +46,11 @@ const en_US = {
         updatePassword: "Modify stream password",
         changepass: "Change password",
         oldPassword: "Old Password",
-        newPassword: "New Password"
+        newPassword: "New Password",
+        deletedMessage: "Deleted Message",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        operationConfirmation: "Operation confirmation"
     },
     tips: {
         repassDifferent: "The duplicate password is different.",
@@ -83,7 +87,9 @@ const en_US = {
         oldPassNotEmpty: "Old password cannot be empty.",
         oldPassWrong: "Old password is incorrect.",
         notAuth: "Not authorized to perform this operation.",
-        changePassSuccess: "The password was changed successfully. You need to login again with your new password."
+        changePassSuccess: "The password was changed successfully. You need to login again with your new password.",
+        banConfirm: "Are you sure you want to ban {uname}?",
+        youHaveBanned: "You have been banned."
     },
     action: {
         toggleNavbar: "Toggle navigation bar",

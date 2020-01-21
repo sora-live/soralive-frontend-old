@@ -17,6 +17,23 @@
         </div>
     </div>
     <div v-else>
+        <div class="modal fade" tabindex="-1" role="dialog" id="confirmDialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">{{$t('info.operationConfirmation')}}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ confirmDialogInfo }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="confirmOk">{{$t('info.confirm')}}</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('info.cancel')}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h1>{{ roomname }}</h1>
         <p>@{{ uname}}</p>
         <div class="container-fluid">
@@ -35,9 +52,14 @@
                     <div class="col-md-6 text-right"><span class="material-icons" title="在线人数">remove_red_eye</span><span class="online-person">{{online}}</span></div>
                 </div>
                 <div class="comment-area" id="commentarea">
-                    <div class="comment-line" v-for="comment in commentList" :key="comment.cmtId">
+                    <div class="comment-line" v-for="comment in commentList" :key="comment.cmtId" :class="{'bg-info': comment.author.uid === 0}">
                         <span class="comment-user">{{comment.author.uname}}：</span>
-                        <span>{{comment.comment.content}}</span>
+                        <span v-if="comment.isDeleted" class="comment-deleted">[{{$t('info.deletedMessage')}}]</span>
+                        <span v-else>{{comment.comment.content}}</span>
+                        <ul class="comment-op" v-if="isAdmin">
+                            <li><a href="javascript:;" @click="retractComment(comment.cmtId)">删除</a></li>
+                            <li><a href="javascript:;" @click="userban(comment.author)">封禁</a></li>
+                        </ul>
                     </div>
                 </div>
                 <div class="comment-input-area">
@@ -58,6 +80,14 @@
         <div>
             <h3>{{$t("info.description")}}</h3>
             <div>{{ description }}</div>
+        </div>
+        <div v-if="isAdmin">
+            <h3>在线用户列表：</h3>
+            <p><a href="javascript:;" @click="getOnline">刷新</a></p>
+            <div v-for="u in onlineList" :key="u.uid" class="online-list">
+                <span>{{ u.uname }}</span>
+                <span class="online-b"><a href="javascript:;" @click="userban(u)">封禁</a></span>
+            </div>
         </div>
     </div>
 </template>
@@ -141,6 +171,26 @@
 .comment-user{
     color: rgb(111, 159, 173);
     font-weight: bold;
+    cursor: pointer;
+}
+.comment-line:hover>.comment-op{
+    display: inline;
+}
+.comment-op{
+    display: none;
+}
+.comment-op li{
+    display: inline;
+    padding-left: 5px;
+}
+.comment-deleted{
+    font-style: italic;
+}
+.online-b{
+    padding-left: 200px;
+}
+.online-list{
+    margin: 25px;
 }
 </style>
 <script>
@@ -149,6 +199,7 @@ import Component from 'vue-class-component'
 import fetchpost, { fetchPostWithSign } from '../util/fetchpost';
 import sleep from '../util/sleep'
 import Player from './player.vue';
+import $ from 'jquery'
 
 @Component({
     components: {
@@ -156,6 +207,7 @@ import Player from './player.vue';
     }
 })
 class LivePage extends Vue {
+    roomid = 0;
     roomname = "Room Title";
     uname = "username";
     description = "Description";
@@ -169,6 +221,9 @@ class LivePage extends Vue {
     chatroom_ws;
     is_readyForChat = false;
     commentList = [];
+    confirmDialogInfo = "";
+    confirmDialogCallback = null;
+    onlineList = [];
     mounted(){
         this.getPlayInfo();
         this.connectChatRoom();
@@ -179,21 +234,26 @@ class LivePage extends Vue {
             this.chatroom_ws.close();
         }
     }
+    get isAdmin() {
+        let type = parseInt(localStorage.getItem('user-type') || "0");
+        return (type >> 4 & 1) == 1;
+    }
     async getPlayInfo(){
+        this.roomid = this.$route.params.uid;
         let api = this.$gConst.apiRoot + "index/roominfo";
         let res;
         if(localStorage.getItem('token') == null){
             res = await fetchpost(api, {
-                uid: this.$route.params.uid
+                uid: this.roomid
             });
         }else if(this.password == ""){
             res = await fetchPostWithSign(api, {
-                uid: this.$route.params.uid,
+                uid: this.roomid,
                 token: localStorage.getItem('token') || ""
             });
         }else{
             res = await fetchPostWithSign(api, {
-                uid: this.$route.params.uid,
+                uid: this.roomid,
                 token: localStorage.getItem('token') || "",
                 password: this.password
             });
@@ -234,7 +294,7 @@ class LivePage extends Vue {
         this.chatroom_ws.addEventListener('open', () => {
             this.wsSend({
                 token: localStorage.getItem('token') || "",
-                roomid: this.$route.params.uid,
+                roomid: this.roomid,
                 cmd: 1
             });
             this.wsStartHeartbeat();
@@ -267,6 +327,37 @@ class LivePage extends Vue {
                         });
                     }
                     break;
+                case 4:
+                    {
+                        switch(msg.subCmd) {
+                            case 3:
+                                {
+                                    this.$router.push('/');
+                                    localStorage.removeItem('token');
+                                    localStorage.removeItem('uname');
+                                    localStorage.removeItem('sk');
+                                    localStorage.removeItem('uid');
+                                    localStorage.removeItem('user-type');
+                                    this.$gConst.globalbus.$emit("send-info", "tips.youHaveBanned");
+                                }
+                                break;
+                            case 4:
+                                {
+                                    for(let i in this.commentList){
+                                        let cmt = this.commentList[i];
+                                        if(cmt.cmtId == msg.extraInfo){
+                                            cmt.isDeleted = true;
+                                            this.commentList.splice(i, 1, cmt);
+                                            break;
+                                        }
+                                    }
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
@@ -297,7 +388,50 @@ class LivePage extends Vue {
             })
             this.input_comment = "";
         }
+    }
+    async retractComment(cmtId){
+        if(this.isAdmin){
+            let api = this.$gConst.apiRoot + "chatadmin/retractcomment";
+            await fetchPostWithSign(api, {
+                token: localStorage.getItem('token') || "",
+                roomId: this.roomid,
+                cmtId: cmtId
+            });
+        }
+    }
+    async userban(user){
+        this.confirmDialogInfo = this.$t('tips.banConfirm', { uname: user.uname });
+        this.confirmDialogCallback = async function(){
+            let api = this.$gConst.apiRoot + "chatadmin/userban";
+            await fetchPostWithSign(api, {
+                token: localStorage.getItem('token') || "",
+                roomId: this.roomid,
+                uid: user.uid
+            });
+        }
+        $("#confirmDialog").modal('show');
+    }
+    async confirmOk(){
+        if (this.confirmDialogCallback){
+            this.confirmDialogCallback();
+        }
+        $("#confirmDialog").modal('hide');
+    }
+    async getOnline(){
+        if(this.isAdmin){
+            let api = this.$gConst.apiRoot + "chatadmin/online";
+            let res = await fetchPostWithSign(api, {
+                token: localStorage.getItem('token') || "",
+                roomId: this.roomid,
+            });
 
+            let resjson = await res.json();
+            if(resjson["error"] != 0){
+                this.$gConst.globalbus.$emit("send-info", resjson['info']);
+            }
+
+            this.onlineList = resjson["online"];
+        }
     }
 }
 export default LivePage;

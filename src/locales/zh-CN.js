@@ -46,7 +46,11 @@ const zh_CN = {
         updatePassword: "更新密码",
         changepass: "修改密码",
         oldPassword: "旧密码",
-        newPassword: "新密码"
+        newPassword: "新密码",
+        deletedMessage: "消息已被撤回",
+        confirm: "确认",
+        cancel: "取消",
+        operationConfirmation: "操作确认"
     },
     tips: {
         repassDifferent: "两次密码不一致。",
@@ -83,7 +87,9 @@ const zh_CN = {
         oldPassNotEmpty: "原密码不能为空",
         oldPassWrong: "原密码不正确",
         notAuth: "无权进行本操作",
-        changePassSuccess: "修改密码成功，您现在需要用您的新密码重新登录。"
+        changePassSuccess: "修改密码成功，您现在需要用您的新密码重新登录。",
+        banConfirm: "确认封禁 {uname} 吗？",
+        youHaveBanned: "您已被封禁。"
     },
     action: {
         toggleNavbar: "切换导航栏",
